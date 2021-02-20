@@ -1,0 +1,118 @@
+<div class="usarios-content">
+    <div class="row">
+        <div class="col-12">
+            <h4>Pedidos</h4>
+        </div>
+        <div class="col-12"><br></div>
+        <div class="col-12 button-container">
+            <button class="btn btn-info" (click) = "abrilModalPedido()">Agregar pedido</button>
+        </div>
+        <div class="col-12"><br></div>
+        <div class="col-12">
+            <table class="table usuarios_table">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Direccion</th>
+                        <th>nTarjeta</th>
+                        <th>Matricula repartidor</th>
+                        <th>Cliente</th>
+                        <th>Accion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let pedido of pedidos">
+                        <td>{{ pedido.fecha }}</td>
+                        <td>{{ pedido.dirEntrega }}</td>
+                        <td>{{ pedido.nTarjeta }}</td>
+                        <td>{{ pedido.matriculaRepartidor }}</td>
+                        <td>{{ pedido.nombreCliente }}</td>
+                        <td>
+                            <button class="btn btn-warning" (click)='editarPedido(pedido.idPedido)'>Editar</button>
+                            &nbsp;
+                            <button class="btn btn-danger" (click)='eliminarPedido(pedido.idPedido)'>Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="backdrop" [ngStyle]="{'display': display}">
+    <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display': display}">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Pedido</h5>
+                    <button (click)="cerrarModal()" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form #pedidoForm="ngForm" (ngSubmit)='guardarPedido'>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="">Fecha de Registro: </label>
+                                    <input class="form-control" type="date" name="fechaPedido" #fecha="ngModel" [(ngModel)]="pedido.fecha" required>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="">Fecha de Caducidad: </label>
+                                    <input class="form-control" type="date" name="fechaCaducidadPedido" #fechaCaducidad="ngModel" [(ngModel)]="pedido.fechaCaducidad" required>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="">Cliente</label>
+                                    <select class="form-control" name="dniClientePedido" #dniCliente="ngModel" [(ngModel)]="pedido.dniCliente" id="">
+                                        <option [value]='cliente.dniCliente' *ngFor="let cliente of clientes">{{ cliente.nombre }}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="">Producto</label>
+                                    <select class="form-control" name="productoPedido" id="" #idProducto="ngModel" [(ngModel)]="pedido.idProducto">
+                                        <option [value]='producto.idProducto' *ngFor="let producto of productos">{{ producto.nombre }}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="">Cantidad</label>
+                                    <input class="form-control" type="number" name="cantidadProductoPedido" #cantidadProducto="ngModel" [(ngModel)]="pedido.cantidadProducto" required>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="">Direccion de entrega: </label>
+                                    <input class="form-control" type="text" name="dirEntregaPedido" #dirEntrega="ngModel" [(ngModel)]="pedido.dirEntrega" required>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="">Numero de tarjeta: </label>
+                                    <input class="form-control" type="text" name="nTarjetaPedido" #nTarjeta="ngModel" [(ngModel)]="pedido.nTarjeta" required>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="">Matrícula de Repartidor: </label>
+                                    <input class="form-control" type="text" name="matriculaRepartidorPedido" #matriculaRepartidor="ngModel" [(ngModel)]="pedido.matriculaRepartidor" required>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" [ngStyle]="{'display': btnGuardar}" class="btn btn-primary" (click)='guardarPedido()'>Guardar pedido</button>
+                    <button type="button" [ngStyle]="{'display': btnActualizar}" class="btn btn-primary" (click)='actualizarPedido()'>Actualizar pedido</button>
+                    <button type="button" class="btn btn-secondary"  (click)="cerrarModal()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

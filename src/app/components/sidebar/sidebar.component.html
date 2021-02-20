@@ -1,0 +1,20 @@
+<div class="sidebar">
+	<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <li class="sidebar-header">
+			<h2>Dashboard</h2>
+		</li>
+		<hr>
+		<li class="sidebar-menu">
+			<a class="nav-link" [routerLink]="['/usuarios']" routerLinkActive="router-link-active" >
+				<i class="fas fa-stream"></i>
+				<h5>Clientes</h5>
+			</a>
+		</li>
+		<li class="sidebar-menu" [routerLink]="['/pedidos']" routerLinkActive="router-link-active" >
+			<a class="nav-link">
+				<i class="fas fa-stream"></i>
+				<h5>Pedidos</h5>
+			</a>
+		</li>
+	</ul>
+</div>

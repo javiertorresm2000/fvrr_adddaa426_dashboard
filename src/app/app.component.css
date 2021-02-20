@@ -1,0 +1,34 @@
+html, body{
+    margin: 0;
+    border: 0;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.row{
+    width: 100%;
+    margin: 0;
+    height: 100%;
+    bottom: 0;
+}
+
+.sidebar-container{
+    bottom: 0;
+    top: 0;
+    position: absolute;
+}
+.content-container{
+    top: 0;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+.content-layout{
+    width: 100%;
+    height: calc(100% - 70px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin-top: 70px;
+    padding: 25px 10px;
+}
+
