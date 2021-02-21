@@ -16,11 +16,13 @@ export class PedidosComponent implements OnInit {
     btnActualizar = 'none';
   
     idPedido: string;
+    lineaspedidos: Array<any> = [];
   
     public pedido: any;
     public pedidos: Pedido[];
     public clientes: Cliente[];
     public productos: any;
+    public productoPedido: any;
   
     constructor(
       private _pedidoService: PedidoService,
@@ -33,8 +35,13 @@ export class PedidosComponent implements OnInit {
         fechaCaducidad: '',
         matriculaRepartidor: '',
         dniCliente: '',
+        lineasPedidos: []
+      }
+
+      this.productoPedido = {
+        idPedido: '',
         idProducto: '',
-        cantidadProducto: ''
+        cantidad: ''
       }
     }
   
@@ -50,6 +57,35 @@ export class PedidosComponent implements OnInit {
       this.btnGuardar = 'block';
       this.cargarClientes();
       this.cargarProductos();
+    }
+
+    agregarProducto(){
+      if(this.productoPedido.idProducto !== '' && this.productoPedido.cantidad !== ''){
+        let nombreProd = '';
+        for(let i = 0; i < this.productos.length; i++){
+          
+          if(String(this.productos[i].idProducto) === String(this.productoPedido.idProducto)){
+            nombreProd = this.productos[i].nombre;
+            break;
+          }
+        }
+        let arrayTemp = {
+          idPedido: this.idPedido,
+          idProducto: this.productoPedido.idProducto,
+          nombre: nombreProd,
+          cantidad: this.productoPedido.cantidad
+        }
+        this.lineaspedidos.push(arrayTemp);
+        this.productoPedido.idProducto = '';
+        this.productoPedido.cantidad = '';
+        this.productoPedido.idPedido = '';
+      }else{
+        alert('Necesitas especificar el producto y la cantidad');
+      }
+    }
+
+    eliminarProd(i){
+      this.lineaspedidos.splice(i, 1);
     }
   
     cerrarModal(){
@@ -96,19 +132,24 @@ export class PedidosComponent implements OnInit {
     }
   
     guardarPedido(){
-      this._pedidoService.savePedido(this.pedido).subscribe(
-        response => {
-          if(response.status === '200'){
-            this.cargarPedidos();
-            this.cerrarModal();
-          }else if(response.status === '500'){
-            alert(response.data);
+      if(this.lineaspedidos.length > 0){
+        this.pedido.lineasPedidos = this.lineaspedidos;
+        this._pedidoService.savePedido(this.pedido).subscribe(
+          response => {
+            if(response.status === '200'){
+              this.cargarPedidos();
+              this.cerrarModal();
+            }else if(response.status === '500'){
+              alert(response.data);
+            }
+          },
+          error => {
+    
           }
-        },
-        error => {
-  
-        }
-      )
+        )
+      }else{
+        alert('Necesitas agrgar al menos un producto al pedido');
+      }
     }
   
     editarPedido(idPedido){
@@ -117,15 +158,16 @@ export class PedidosComponent implements OnInit {
       this._pedidoService.getPedido(idPedido).subscribe(
         response => {
           if(response.status === '200'){
-            this.pedido.fecha = response.data.fecha;
-            this.pedido.fechaCaducidad = response.data.fechaCaducidad;
-            this.pedido.dirEntrega = response.data.dirEntrega;
-            this.pedido.nTarjeta = response.data.nTarjeta;
-            this.pedido.fechaCaducidad = response.data.fechaCaducidad;
-            this.pedido.matriculaRepartidor = response.data.matriculaRepartidor;
-            this.pedido.dniCliente = response.data.dniCliente;
-            this.pedido.idProducto = response.data.idProducto;
-            this.pedido.cantidadProducto = response.data.cantidadProducto;
+            let pedido = response.data.pedido;
+            this.pedido.fecha = pedido.fecha;
+            this.pedido.fechaCaducidad = pedido.fechaCaducidad;
+            this.pedido.dirEntrega = pedido.dirEntrega;
+            this.pedido.nTarjeta = pedido.nTarjeta;
+            this.pedido.fechaCaducidad = pedido.fechaCaducidad;
+            this.pedido.matriculaRepartidor = pedido.matriculaRepartidor;
+            this.pedido.dniCliente = pedido.dniCliente;
+
+            this.lineaspedidos = response.data.lineaspedidos;
           }
         },
         error => {
@@ -137,25 +179,29 @@ export class PedidosComponent implements OnInit {
     }
   
     actualizarPedido(){
-      this._pedidoService.updatePedido(this.idPedido, this.pedido).subscribe(
-        response => {
-          if(response.status === '200'){
-            this.cargarPedidos();
-            this.cerrarModal();
-            this.limpiarFormPedido();
-          }else if(response.status === '500'){
-            alert(response.data);
+      if(this.lineaspedidos.length > 0){
+        this.pedido.lineasPedidos = this.lineaspedidos;
+        this._pedidoService.updatePedido(this.idPedido, this.pedido).subscribe(
+          response => {
+            if(response.status === '200'){
+              this.cargarPedidos();
+              this.cerrarModal();
+              this.limpiarFormPedido();
+            }else if(response.status === '500'){
+              alert(response.data);
+            }
+          },
+          error => {
+    
           }
-        },
-        error => {
-  
-        }
-      )
+        )
+      }else{
+        alert('Necesitas agrgar al menos un producto al pedido');
+      }
     }
   
-    eliminarPedido(dni){
-      console.log(dni)
-      this._pedidoService.deletePedido(dni).subscribe(
+    eliminarPedido(idPedido){
+      this._pedidoService.deletePedido(idPedido).subscribe(
         response => {
           if(response.status === '200'){
             this.cargarPedidos();
@@ -176,6 +222,10 @@ export class PedidosComponent implements OnInit {
       this.pedido.fechaCaducidad = '';
       this.pedido.matriculaRepartidor = '';
       this.pedido.dniCliente = '';
-      this.pedido.idProducto = '';
-      this.pedido.cantidadProducto = '';    }
+      
+      this.productoPedido.idProducto = '';
+      this.productoPedido.cantidad = '';
+
+      this.lineaspedidos = [];
+    }
   }

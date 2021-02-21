@@ -40,8 +40,8 @@
 </div>
 
 <div class="backdrop" [ngStyle]="{'display': display}">
-    <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display': display}">
-        <div class="modal-dialog" role="document">
+    <div class="modal detalles" tabindex="-1" role="dialog" [ngStyle]="{'display': display}">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Pedido</h5>
@@ -72,20 +72,51 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-6">
+                            <div class="col-12"><hr></div>
+                            <div class="col-5">
                                 <div class="form-group">
                                     <label for="">Producto</label>
-                                    <select class="form-control" name="productoPedido" id="" #idProducto="ngModel" [(ngModel)]="pedido.idProducto">
+                                    <select class="form-control" name="productoPedido" id="" #idProducto="ngModel" [(ngModel)]="productoPedido.idProducto">
                                         <option [value]='producto.idProducto' *ngFor="let producto of productos">{{ producto.nombre }}</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-6">
+                            <div class="col-5">
                                 <div class="form-group">
                                     <label for="">Cantidad</label>
-                                    <input class="form-control" type="number" name="cantidadProductoPedido" #cantidadProducto="ngModel" [(ngModel)]="pedido.cantidadProducto" required>
+                                    <input class="form-control" type="number" name="cantidadProductoPedido" #cantidad="ngModel" [(ngModel)]="productoPedido.cantidad" required>
                                 </div>
                             </div>
+                            <div class="col-2">
+                                <div class="form-group">
+                                    <label for="">Agregar</label>
+                                    <button class="btn btn-info" type="button" (click)='agregarProducto()' >Agregar</button>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>idProducto</th>
+                                            <th>Nombre</th>
+                                            <th>Cantidad</th>
+                                            <th>Accion</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let lineaProd of lineaspedidos, let i = index">
+                                            <td>{{ lineaProd.idProducto }} </td>
+                                            <td>{{ lineaProd.nombre }} </td>
+                                            <td>{{ lineaProd.cantidad }} </td>
+                                            <td><button (click) = 'eliminarProd(i)' class="btn btn-danger">Eliminar</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-12">
+                                <hr>
+                            </div>
+                            
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="">Direccion de entrega: </label>
